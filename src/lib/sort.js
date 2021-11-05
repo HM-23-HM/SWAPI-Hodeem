@@ -1,18 +1,31 @@
 
 let testArray = [
-    { name: 'Luke Skywalker' },
-    { name: 'C-3PO' },
-    { name: 'R2-D2' },
-    { name: 'Darth Vader' },
-    { name: 'Leia Organa' },
-    { name: 'Owen Lars' },
-    { name: 'Beru Whitesun lars' },
-    { name: 'R5-D4' }
+    { name: 'Luke Skywalker', homeworld: 'Tatooine'},
+    { name: 'C-3PO', homeworld: 'Tatooine' },
+    { name: 'R2-D2', homeworld: 'Naboo' },
+    { name: 'Darth Vader', homeworld: 'Tatooine' },
+    { name: 'Leia Organa', homeworld: 'Alderaan' },
+    { name: 'Owen Lars', homeworld: 'Tatooine' },
+    { name: 'Beru Whitesun lars', homeworld: 'Tatooine' },
+    { name: 'R5-D4', homeworld: 'Tatooine' }
 ]
 
 const AscendingCompareFn = (firstObject, secondObject) => {
-    let firstEl = firstObject.name;
-    let secondEl = secondObject.name;
+
+    if(sortBy == 'homeworld'){
+        var firstEl = firstObject.homeworld;
+        var secondEl = secondObject.homeworld;
+    }
+
+    if(sortBy == 'vehicles'){
+        var firstEl = firstObject.vehicles.length;
+        var secondEl = secondObject.vehicles.length;
+    }
+
+    if(sortBy == 'starships'){
+        var firstEl = firstObject.starships.length;
+        var secondEl = secondObject.starships.length;
+    }
 
     if (firstEl < secondEl) return -1;
     if (secondEl < firstEl) return 1;
@@ -20,20 +33,34 @@ const AscendingCompareFn = (firstObject, secondObject) => {
 }
 
 const DescendingCompareFn = (firstObject, secondObject) => {
-    let firstEl = firstObject.name;
-    let secondEl = secondObject.name;
+
+    if(sortBy == 'homeworld'){
+        var firstEl = firstObject.homeworld;
+        var secondEl = secondObject.homeworld;
+    }
+
+    if(sortBy == 'vehicles'){
+        var firstEl = firstObject.vehicles.length;
+        var secondEl = secondObject.vehicles.length;
+    }
+
+    if(sortBy == 'starships'){
+        var firstEl = firstObject.starships.length;
+        var secondEl = secondObject.starships.length;
+    }
 
     if (firstEl > secondEl) return -1;
     if (secondEl < firstEl) return 1;
     return 0;
 }
 
-export const sortAscending = (unsortedArray) => {
+const sortAscending = (unsortedArray) => {
     let sortedArray = [...unsortedArray].sort(AscendingCompareFn);
     return sortedArray;
 }
 
-export const sortDescending = (unsortedArray) => {
+const sortDescending = (unsortedArray) => {
     let sortedArray = [...unsortedArray].sort(DescendingCompareFn);
     return sortedArray;
 }
+

@@ -4,10 +4,10 @@ import './App.css'
 import CardsBlock from './components/CardsBlock'
 
 import DataService from './lib/DataService'
-import { sortAscending, sortDescending } from './lib/sort'
 
 function App() {
 
+    const [sortBy, setSortBy] = useState('homeworld');
     const [characterDetails, setCharacterDetails] = useState(
         [
             {
@@ -19,19 +19,19 @@ function App() {
                 starships: []
             }
         ]
-    )
+    );
 
     const handleError = (e) => {
         console.log("Error is ", e)
-    }
+    };
 
     const extractAllRaw = () => {
         DataService.getAllData()
-            .then(response => extractRelevantData(response.data.results))
+            .then(response => transformRawData(response.data.results))
             .catch(err => alert(err));
-    }
+    };
 
-    const extractRelevantData = (rawData) => {
+    const transformRawData = (rawData) => {
         const relevantData = []
 
         rawData.forEach((character) => {
@@ -43,7 +43,7 @@ function App() {
 
         getHomeworld(relevantData)
 
-    }
+    };
 
     const getHomeworld = (relevantData) => {
 
@@ -61,7 +61,7 @@ function App() {
 
         getSpecies(relevantData);
 
-    }
+    };
 
     const getSpecies = (relevantData) => {
 
@@ -82,7 +82,7 @@ function App() {
 
         getStarshipsAndVehicles(relevantData)
 
-    }
+    };
 
     const getStarshipsAndVehicles = (relevantData) => {
 
@@ -131,25 +131,88 @@ function App() {
             character.vehicles = vehicleNames;
         })
 
-        console.log("It's here ", relevantData);
         setCharacterDetails(relevantData);
 
-    }
+    };
 
-    const sortAsc = () => {
+    const AscendingCompareFn = (firstObject, secondObject) => {
+
+        if(sortBy == 'homeworld'){
+            var firstEl = firstObject.homeworld;
+            var secondEl = secondObject.homeworld;
+        }
+    
+        if(sortBy == 'vehicles'){
+            var firstEl = firstObject.vehicles.length;
+            var secondEl = secondObject.vehicles.length;
+        }
+    
+        if(sortBy == 'starships'){
+            var firstEl = firstObject.starships.length;
+            var secondEl = secondObject.starships.length;
+        }
+    
+        if (firstEl < secondEl) return -1;
+        if (secondEl < firstEl) return 1;
+        return 0;
+    };
+    
+    const DescendingCompareFn = (firstObject, secondObject) => {
+    
+        if(sortBy == 'homeworld'){
+            var firstEl = firstObject.homeworld;
+            var secondEl = secondObject.homeworld;
+        }
+    
+        if(sortBy == 'vehicles'){
+            var firstEl = firstObject.vehicles.length;
+            var secondEl = secondObject.vehicles.length;
+        }
+    
+        if(sortBy == 'starships'){
+            var firstEl = firstObject.starships.length;
+            var secondEl = secondObject.starships.length;
+        }
+    
+        if (firstEl > secondEl) return -1;
+        if (secondEl < firstEl) return 1;
+        return 0;
+    };
+    
+    const sortAscending = (unsortedArray) => {
+        let sortedArray = [...unsortedArray].sort(AscendingCompareFn);
+        return sortedArray;
+    };
+    
+    const sortDescending = (unsortedArray) => {
+        let sortedArray = [...unsortedArray].sort(DescendingCompareFn);
+        return sortedArray;
+    };
+
+    const setSortedAsc = () => {
         setCharacterDetails(sortAscending(characterDetails))
-    }
+    };
 
-    const sortDesc = () => {
+    const setSortedDesc = () => {
         setCharacterDetails(sortDescending(characterDetails))
-    }
+    };
+
+    const handleSelectChange = (e) => {
+        setSortBy(e.target.value);
+    };
 
 
     return (
         <div className="App">
-            <button onClick={() => extractAllRaw()}> Testing </button>
-            <button onClick={() => sortAsc()}> Asc </button>
-            <button onClick={() => sortDesc()}> Desc </button>
+            <button onClick={() => extractAllRaw()}> All Cards </button>
+            <select id="sortBy" onChange={handleSelectChange}>
+                <option value="homeworld">Homeworld</option>
+                <option value="starships">Starships</option>
+                <option value="vehicles">Vehicles</option>
+            </select>
+
+            <button onClick={() => setSortedAsc()}> Asc </button>
+            <button onClick={() => setSortedDesc()}> Desc </button>
 
             <CardsBlock data={characterDetails} />
         </div>
