@@ -1,10 +1,12 @@
-.App {
+body {
   text-align: center;
+  display: flex;
+  justify-content: center;
+  background-color: #E5E5E5;
 }
 
 .card {
-  border-width: 0.5px;
-  border-style: solid;
+  background-color: white;
 }
 
 .name-block {
@@ -22,7 +24,7 @@
 }
 
 .name {
-  position: absolute;
+  /* position: absolute; */
 }
 
 .demographic-block, .field {
@@ -56,7 +58,15 @@
   border-width: 0.5px;
   background-color: #EDEDED;
   align-items: center;
+}
 
+.details-block {
+  background-color: #fff;
+  border-radius: 0px 0px 8px 8px;
+}
+
+.cards-block {
+  display: grid;
 }
 
 @media only screen and (min-width: 320px) {
@@ -67,59 +77,64 @@
   .name-block {
     height: 98px;
   }
-
   .name-block img {
     margin-top: 16.5px;
     margin-left: 18.5px;
   }
-
   .name {
     margin: 0px;
     top: 64px;
     left: 16px;
   }
-
   .icon {
     margin: 10.5px 6.5px 9.5px 0px;
   }
-
   .field {
     height: 32px;
     padding-right: 8px;
     padding-left: 9.5px;
-    border-radius: 4px;;
+    border-radius: 4px;
+    ;
   }
-
-
-
   .label {
-    margin: 11px 0px 11px 0px; 
+    margin: 11px 0px 11px 0px;
     font-size: 10px;
   }
-
   .value {
     font-size: 14px;
   }
-
   .details-block {
     padding: 0px 16px 16px 16px;
   }
-
   .fields {
     row-gap: 8px;
     width: 184px;
   }
-  
   .demographics {
     margin: 16px 0px 16px 0px;
   }
-
   .demographic-block {
     height: 24px;
     /* padding-bottom: 8px; */
   }
-
   .gender {
     margin-left: 4px;
+  }
+  .cards-block {
+    row-gap: 24px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .cards-block {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 24px;
+  }
+}
+
+@media only screen and (min-width: 1024px){
+  .cards-block {
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: repeat(5, 1fr);
   }
 }
