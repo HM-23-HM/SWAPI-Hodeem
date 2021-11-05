@@ -12,41 +12,43 @@ const SummaryCard = ({ Name = 'Name', Gender = '19BBY', Species = 'Species', Hom
     return (
         <div className='card'>
             <div className='name-block'>
-                <img src={Card} />
-                <p>{Name}</p>
+            <div className='name-icon'><img src={Card} /></div>
+                <p className='name'>{Name}</p>
             </div>
             <div className='details-block'>
                 <div className='demographics'>
-                    <span>
-                        <img src={GenderMale} />
-                        <span>{Gender}</span>
-                    </span>
-                    <span>{Species}</span>
+                    <div className="demographic-block">
+                        <span>
+                            <img src={GenderMale} />                            
+                            <span className='value gender'>{Gender}</span>
+                        </span>
+                        <span className='value'>{Species}</span>
+                    </div>
                 </div>
                 <div className="fields">
                     <div className="field">
-                        <span>
-                            <img src={HomeworldIcon} />
-                            <span>HOMEWORLD</span>
+                        <span className='label-block'>
+                            <img className='icon' src={HomeworldIcon} />
+                            <span className='label'>HOMEWORLD</span>
                         </span>
 
-                        <span>{Homeworld}</span>
+                        <span className='value'>{Homeworld}</span>
                     </div>
                     <div className="field">
-                        <span>
-                            <img src={Vehicle} />
-                            <span>VEHICLES</span>
+                        <span className='label-block'>
+                            <img className='icon' src={Vehicle} />
+                            <span className='label'>VEHICLES</span>
                         </span>
 
-                        <span>{NumVehicles}</span>
+                        <span className='value'>{NumVehicles}</span>
                     </div>
                     <div className="field">
-                        <span>
-                            <img src={Starship} />
-                            <span>STARSHIPS</span>
+                        <span className='label-block'>
+                            <img className='icon' src={Starship} />
+                            <span className='label'>STARSHIPS</span>
                         </span>
 
-                        <span>{NumStarships}</span>
+                        <span className='value'>{NumStarships}</span>
                     </div>
                 </div>
 
