@@ -3,33 +3,21 @@ import './App.css'
 
 import CardIcon from './icons/Card.svg'
 import DeckIcon from './icons/Deck.svg'
-
 import CardsBlock from './components/CardsBlock'
 
 import DataService from './lib/DataService'
-
 import { removeUnecessaryFields, getHomeworld, getSpecies, getStarshipsAndVehicles } from './lib/ETL'
+
+import { BeatLoader } from 'react-spinners'
 
 function App() {
 
     const [sortBy, setSortBy] = useState('homeworld');
-    const [characterDetails, setCharacterDetails] = useState(
-        [
-            {
-                name: 'Name',
-                gender: 'n/a',
-                species: 'Species',
-                homeworld: 'Planet',
-                vehicles: [],
-                starships: []
-            }
-        ]
-    );
+    const [characterDetails, setCharacterDetails] = useState(undefined);
 
     useLayoutEffect(() => {
-        console.log("Use Effect ran");
         extractData();
-    },[]);
+    }, []);
 
     const extractData = () => {
         DataService.getAllData()
@@ -107,7 +95,6 @@ function App() {
         setSortBy(e.target.value);
     };
 
-
     return (
         <div className="App">
             <div className="top-block">
@@ -143,9 +130,10 @@ function App() {
                     <button onClick={() => invokeSortDesc()}> Desc </button>
                 </div>
             </div>
-
-
-            <CardsBlock data={characterDetails} />
+            {characterDetails ?
+                <CardsBlock data={characterDetails} /> :
+                <BeatLoader size={100} />
+            }
         </div>
     )
 }
