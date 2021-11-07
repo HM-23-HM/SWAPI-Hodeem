@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useLayoutEffect } from 'react'
 import './App.css'
 
 import CardIcon from './icons/Card.svg'
@@ -7,6 +7,8 @@ import DeckIcon from './icons/Deck.svg'
 import CardsBlock from './components/CardsBlock'
 
 import DataService from './lib/DataService'
+
+import { removeUnecessaryFields, getHomeworld, getSpecies, getStarshipsAndVehicles } from './lib/ETL'
 
 function App() {
 
@@ -24,118 +26,19 @@ function App() {
         ]
     );
 
-    const handleError = (e) => {
-        console.log("Error is ", e)
-    };
+    useLayoutEffect(() => {
+        console.log("Use Effect ran");
+        extractData();
+    },[]);
 
-    const extractAllRaw = () => {
+    const extractData = () => {
         DataService.getAllData()
-            .then(response => transformRawData(response.data.results))
-            .catch(err => alert(err));
-    };
-
-    const transformRawData = (rawData) => {
-        const relevantData = []
-
-        rawData.forEach((character) => {
-            let entry = {};
-            const { name, gender, species, homeworld, vehicles, starships } = character;
-            entry = { name, gender, species, homeworld, vehicles, starships };
-            relevantData.push(entry)
-        });
-
-        getHomeworld(relevantData)
-
-    };
-
-    const getHomeworld = (relevantData) => {
-
-        relevantData.forEach((character) => {
-            let homeEndpoint = character.homeworld;
-
-            DataService.getMissingData(homeEndpoint)
-                .then(response => {
-                    character.homeworld = response.data.name
-                })
-                .catch(err => alert(err));
-
-
-        });
-
-        getSpecies(relevantData);
-
-    };
-
-    const getSpecies = (relevantData) => {
-
-        relevantData.forEach((character) => {
-            let speciesEndpoint = character.species;
-
-            if (speciesEndpoint.length === 0) {
-                character.species = 'Human';
-                return;
-            }
-
-            DataService.getMissingData(speciesEndpoint)
-                .then(response => {
-                    character.species = response.data.name
-                })
-                .catch(err => alert(err));
-        });
-
-        getStarshipsAndVehicles(relevantData)
-
-    };
-
-    const getStarshipsAndVehicles = (relevantData) => {
-
-        relevantData.forEach((character) => {
-
-            let starshipNames = [];
-
-            let starshipEndpoints = character.starships;
-
-            if (starshipEndpoints.length === 0) {
-                character.starships = starshipNames;
-                return;
-            }
-
-            starshipEndpoints.forEach((endpoint) => {
-
-                DataService.getMissingData(endpoint)
-                    .then(response => starshipNames.push(response.data.name))
-                    .catch(err => alert(err));
-            })
-
-
-
-            character.starships = starshipNames;
-        })
-
-        relevantData.forEach((character) => {
-
-            let vehicleNames = [];
-
-            let vehicleEndpoints = character.vehicles;
-
-            if (vehicleEndpoints.length === 0) {
-                character.vehicles = vehicleNames;
-                return;
-            }
-
-            vehicleEndpoints.forEach((endpoint) => {
-
-                DataService.getMissingData(endpoint)
-                    .then(response => vehicleNames.push(response.data.name))
-                    .catch(err => alert(err));
-
-            })
-
-            character.vehicles = vehicleNames;
-        })
-
-        setCharacterDetails(relevantData);
-
+            .then(response => removeUnecessaryFields(response.data.results))
+            .then(response => getHomeworld(response))
+            .then(response => getSpecies(response))
+            .then(response => getStarshipsAndVehicles(response))
+            .then(response => setCharacterDetails(response))
+            .catch(err => console.log(err));
     };
 
     const AscendingCompareFn = (firstObject, secondObject) => {
@@ -192,11 +95,11 @@ function App() {
         return sortedArray;
     };
 
-    const setSortedAsc = () => {
+    const invokeSortAsc = () => {
         setCharacterDetails(sortAscending(characterDetails))
     };
 
-    const setSortedDesc = () => {
+    const invokeSortDesc = () => {
         setCharacterDetails(sortDescending(characterDetails))
     };
 
@@ -210,7 +113,7 @@ function App() {
             <div className="top-block">
                 <div className="top-btn-bar">
                     <span className='top-btn-bar-left'>
-                        <button className='btn-top' onClick={() => extractAllRaw()}>
+                        <button className='btn-top' onClick={() => extractData()}>
                             <img src={CardIcon} />
                             <span> All Cards </span>
                         </button>
@@ -227,7 +130,7 @@ function App() {
                     <p>Enter dynamic route here</p>
                 </div>
                 <div id="search-bar">
-                    <input type='text' placeholder='Search' id='search'/>
+                    <input type='text' placeholder='Search' id='search' />
                 </div>
                 <div id="sort-bar">
                     <select id="sortBy" onChange={handleSelectChange}>
@@ -236,8 +139,8 @@ function App() {
                         <option value="vehicles">Vehicles</option>
                     </select>
 
-                    <button onClick={() => setSortedAsc()}> Asc </button>
-                    <button onClick={() => setSortedDesc()}> Desc </button>
+                    <button onClick={() => invokeSortAsc()}> Asc </button>
+                    <button onClick={() => invokeSortDesc()}> Desc </button>
                 </div>
             </div>
 

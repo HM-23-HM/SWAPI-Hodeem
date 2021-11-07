@@ -9,6 +9,8 @@ import Vehicle from '../icons/Vehicle.svg'
 
 const SummaryCard = ({ data }) => {
 
+    // console.log("New data", data);
+
     const numVehicles = data.vehicles.length;
     const numStarships = data.starships.length;
 
