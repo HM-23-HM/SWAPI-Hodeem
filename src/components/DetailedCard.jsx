@@ -17,7 +17,7 @@ const mapStateToProps = (state) => ({
 const DetailedCard = (props) => {
 
     return (
-        <div className='card'>
+        <div className='detailed-card'>
             <div className='name-block'>
                 <div className='name-icon'><img src={Card} /></div>
                 <p className='name'>{props.details.name}</p>

@@ -1,84 +1,97 @@
 import DataService from './DataService'
 
-export const removeUnecessaryFields = (rawData) => {
+/** This function is used to remove the unecessary fields from the original object returned by the SWAPI API. 
+ * @param {object} unalteredResponse    Unaltered response from the SWAPI API
+ * @return {Array}                      Data which has been filtered for each character's `name`[string], 
+ *                                      `gender`[string], `species`(endpoint[string]), `homeworld` (endpoint[string]),
+ *                                      `starships` (array of endpoints[string]) 
+ *                                      and `vehicles` (array of endpoints[string])
+*/
+export const removeUnecessaryFields = (unalteredResponse) => {
 
-    var relevantData = [];
+    var transformedData = [];
 
-    rawData.forEach((character) => {
+    unalteredResponse.forEach((character) => {
         let entry = {};
         const { name, gender, species, homeworld, vehicles, starships } = character;
         entry = { name, gender, species, homeworld, vehicles, starships };
-        relevantData.push(entry)
+        transformedData.push(entry)
     });
 
-    return relevantData;
+    return transformedData;
 };
 
-export const getHomeworld = async (relevantData) => {
+/** This function retrieves the value for each character's `homeworld` from the SWAPI API and replaces the existing
+ * endpoint with the response from the SWAPI API.
+ * @param {Array} transformedData       This is the transformed data which has yet to receive the `homeworld` values
+ *                                      for each character.
+ * @return {Promise}                    The transformed data with each character's `homeworld` value set.
+  */
+export const getHomeworlds = async (transformedData) => {
 
-    let homeworldPromises = [];
+    let homeworldNames = [];
 
-    relevantData.forEach((character) => {
-        let homeEndpoint = character.homeworld;
+    for (let i = 0; i < transformedData.length; i++){
+        let homeEndpoint = transformedData[i].homeworld;
 
-        let promise = DataService.getMissingData(homeEndpoint)
-            .then(response => response.data.name);
+        let response = await DataService.getMissingData(homeEndpoint);
+        let nameOfHomeworld = response.data.name;
+        homeworldNames.push(nameOfHomeworld)
+    }
 
-        homeworldPromises.push(promise);
-    });
+    for (let i = 0; i < transformedData.length ; i++){
+        transformedData[i].homeworld = homeworldNames[i];
+    }
 
-    let finalPromise = await Promise.allSettled(homeworldPromises)
-        .then(results => {
-            for (let i = 0; i < relevantData.length; i++) {
-                relevantData[i].homeworld = results[i].value;
-            };
+    return transformedData;
 
-            return relevantData;
-        })
-
-    return finalPromise;
 };
 
-export const getSpecies = (relevantData) => {
+/** This function retrieves the value for each character's `species` from the SWAPI API and replaces the existing
+ * endpoint with the response from the SWAPI API.
+ * @param {Array} transformedData       This is the transformed data which has yet to receive the `species` values
+ *                                      for each character.
+ * @return {Promise}                    The transformed data with each character's `species` value set.
+ */
+export const getSpecies = async (transformedData) => {
 
-    let speciesPromises = [];
+    let speciesNames = [];
 
-    relevantData.forEach((character) => {
-        let speciesEndpoint = character.species;
+    for (let i = 0; i < transformedData.length; i++){
+        let speciesEndpoint = transformedData[i].species;
 
         if (speciesEndpoint.length === 0) {
-            speciesPromises.push(Promise.resolve('Human'));
-            return;
+            speciesNames.push('Human');
+            continue;
         }
 
-        let promise = DataService.getMissingData(speciesEndpoint)
-            .then(response => response.data.name)
+        let response = await DataService.getMissingData(speciesEndpoint);
+        let nameOfSpecies = response.data.name;
+        speciesNames.push(nameOfSpecies);
+    }
 
-        speciesPromises.push(promise);
-    });
+    for (let i = 0; i < transformedData.length; i++){
+        transformedData[i].species = speciesNames[i];
+    }
 
-    let finalPromise = Promise.allSettled(speciesPromises)
-        .then(results => {
-            for (let i = 0; i < relevantData.length; i++) {
-                relevantData[i].species = results[i].value;
-            };
-
-            return relevantData;
-        })
-
-    return finalPromise;
-
+    return transformedData;
 };
 
-export const getStarships = async (relevantData) => {
+/** This function retrieves the values for each character's `starships` from the SWAPI API and replaces the existing
+ * array of endpoints with an array of the names of each starship.
+ * @param {Array} transformedData       This is the transformed data which has yet to receive the array of starship 
+ *                                      names.
+ * @return {Promise}                    The transformed data with each character's `starships` value set.
+ */
+export const getStarships = async (transformedData) => {
 
     let combinedResults = [];
 
-    for (let i = 0; i < relevantData.length; i++) {
+    for (let i = 0; i < transformedData.length; i++) {
 
         let initialStarshipNames = [];
 
-        let starshipEndpoints = relevantData[i].starships;
+        let starshipEndpoints = transformedData[i].starships;
 
         if (starshipEndpoints.length === 0) {
             combinedResults.push([]);
@@ -94,13 +107,19 @@ export const getStarships = async (relevantData) => {
         combinedResults.push(initialStarshipNames);
     }
 
-    for (let i = 0; i < relevantData.length; i++) {
-        relevantData[i].starships = combinedResults[i];
+    for (let i = 0; i < transformedData.length; i++) {
+        transformedData[i].starships = combinedResults[i];
     }
 
-    return relevantData;
+    return transformedData;
 }
 
+/** This function retrieves the values for each character's `vehicles` from the SWAPI API and replaces the existing
+ * array of endpoints with an array of the names of each Vehicle.
+ * @param {Array} relevantData          This is the transformed data which has yet to receive the array of vehicle 
+ *                                      names.
+ * @return {Promise}                    The transformed data with each character's `vehicles` value set.
+ */
 export const getVehicles = async (relevantData) => {
 
     let combinedResults = [];

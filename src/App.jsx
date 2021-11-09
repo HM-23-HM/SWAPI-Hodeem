@@ -6,7 +6,7 @@ import './App.css'
 import CardsBlock from './components/CardsBlock'
 import DataService from './lib/DataService'
 
-import { removeUnecessaryFields, getHomeworld, getSpecies, getStarships, getVehicles } from './lib/ETL'
+import { removeUnecessaryFields, getHomeworlds, getSpecies, getStarships, getVehicles } from './lib/ETL'
 import { BeatLoader } from 'react-spinners'
 import { connect } from 'react-redux'
 import { toSummaries } from './lib/redux/actions'
@@ -32,10 +32,13 @@ const App = (props) => {
         extractData();
     }, []);
 
+    /** This function extracts all of the unaltered data from the SWAPI API, transforms it and populates the
+     *  card block.
+     */
     const extractData = () => {
         DataService.getAllData()
             .then(response => removeUnecessaryFields(response.data.results))
-            .then(response => getHomeworld(response))
+            .then(response => getHomeworlds(response))
             .then(response => getSpecies(response))
             .then(response => getStarships(response))
             .then(response => getVehicles(response))
@@ -44,6 +47,12 @@ const App = (props) => {
 
     };
 
+    /** This is a custom compare function to be used by the Array.sort() method when sorting the cards in ascending 
+     *  order.
+     * @param {Object} firstObject      This is the first parameter used by the Array.sort() method when invoked.
+     * @param {Object} secondObject     This is the second parameter used by the Array.sort() method when invoked.
+     * @return {Number}                 The number which determines the order of placement of the two arguments.
+     */
     const AscendingCompareFn = (firstObject, secondObject) => {
 
         if (sortBy == 'homeworld') {
@@ -66,6 +75,12 @@ const App = (props) => {
         return 0;
     };
 
+    /** This is a custom compare function to be used by the Array.sort() method when sorting the cards in 
+     * descending order.
+     * @param {Object} firstObject      This is the first parameter used by the Array.sort() method when invoked.
+     * @param {Object} secondObject     This is the second parameter used by the Array.sort() method when invoked.
+     * @return {Number}                 The number which determines the order of placement of the two arguments. 
+     */
     const DescendingCompareFn = (firstObject, secondObject) => {
 
         if (sortBy == 'homeworld') {
@@ -88,22 +103,22 @@ const App = (props) => {
         return 0;
     };
 
+    /** This functions receives an unsorted array of cards and returns it sorted in ascending order.
+     * @param {Array} unsortedArray     The unsorted array of cards.
+     * @return {Array}                  The array sorted in ascending order.
+     */
     const sortAscending = (unsortedArray) => {
         let sortedArray = [...unsortedArray].sort(AscendingCompareFn);
         return sortedArray;
     };
 
+    /** This function receives an unsorted array of cards an returns it sorted in descending order.
+     * @param {Array} unsortedArray     The unsorted array of cards.
+     * @return {Array}                  The array sorted in descending order.
+     */
     const sortDescending = (unsortedArray) => {
         let sortedArray = [...unsortedArray].sort(DescendingCompareFn);
         return sortedArray;
-    };
-
-    const invokeSortAsc = () => {
-        setCharacterDetails(sortAscending(allCharactersDetails))
-    };
-
-    const invokeSortDesc = () => {
-        setCharacterDetails(sortDescending(allCharactersDetails))
     };
 
     const handleSelectChange = (e) => {
@@ -111,10 +126,10 @@ const App = (props) => {
     };
 
     return (
-        <div className="App">
-            <div className='layout'>
-                <div className="top-btn-bar">
-                    <span className='top-btn-bar-left'>
+        <div>
+            <div id='before-search'>
+                <div id="top-btn-bar">
+                    <span id='top-btn-bar-left'>
                         <button className='btn-top' onClick={() => props.dispatchToSummaries()}>
                             <img src={CardIcon} />
                             <span> All Cards </span>
@@ -135,22 +150,22 @@ const App = (props) => {
                 </div>
             </div>
 
-            <div id="search-bar">
+            <div id='search-and-sort'>
                 <input type='text' placeholder='Search' id='search' />
-            </div>
 
-            <div id="sort-bar">
-                <span>Sort By: </span>
+                <div id="sort-bar">
+                    <span>Sort By: </span>
+                    <select id="sortBy" onChange={handleSelectChange}>
+                        <option value="homeworld">Homeworld</option>
+                        <option value="starships">Starships</option>
+                        <option value="vehicles">Vehicles</option>
+                    </select>
+                    <span id='sort-btn-group'>
+                        <button onClick={() => setCharacterDetails(sortAscending(allCharactersDetails))}> ASC </button>
+                        <button onClick={() => setCharacterDetails(sortDescending(allCharactersDetails))}> DESC </button>
+                    </span>
+                </div>
 
-                <select id="sortBy" onChange={handleSelectChange}>
-                    <option value="homeworld">Homeworld</option>
-                    <option value="starships">Starships</option>
-                    <option value="vehicles">Vehicles</option>
-                </select>
-                <span id='sort-btn-group'>
-                    <button onClick={() => invokeSortAsc()}> ASC </button>
-                    <button onClick={() => invokeSortDesc()}> DESC </button>
-                </span>
             </div>
 
             {!allCharactersDetails ?
