@@ -14,7 +14,7 @@ const mapStateToProps = (state) => ({
     details: state.details
 })
 
-const DetailCard = (props) => {
+const DetailedCard = (props) => {
 
     return (
         <div className='card'>
@@ -45,7 +45,7 @@ const DetailCard = (props) => {
                         <>
                             {props.details.vehicles.map((vehicle) =>
                             (
-                                <div className="field">
+                                <div key={vehicle}className="field">
                                     <span className='label-block'>
                                         <img className='icon' src={Vehicle} />
                                         <span className='label'>VEHICLE</span>
@@ -70,7 +70,7 @@ const DetailCard = (props) => {
                     {props.details.starships.length !== 0 ?
                         <>
                             {props.details.starships.map((starship) => (
-                                <div className="field">
+                                <div key={starship} className="field">
                                     <span className='label-block'>
                                         <img className='icon' src={Starship} />
                                         <span className='label'>STARSHIP</span>
@@ -100,4 +100,4 @@ const DetailCard = (props) => {
 }
 
 
-export default connect(mapStateToProps)(DetailCard);
+export default connect(mapStateToProps)(DetailedCard);

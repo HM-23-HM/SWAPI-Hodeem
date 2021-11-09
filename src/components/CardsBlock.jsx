@@ -1,7 +1,7 @@
 import React from 'react'
 
 import SummaryCard from './SummaryCard'
-import DetailCard from './DetailedCard'
+import DetailedCard from './DetailedCard'
 
 import { connect } from 'react-redux'
 import { toDetails } from '../lib/redux/actions'
@@ -27,7 +27,7 @@ const CardsBlock = (props) => {
                 </div>
             ))
                 :
-                <DetailCard />
+                <DetailedCard />
             }
         </div>
     )
