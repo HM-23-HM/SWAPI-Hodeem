@@ -7,13 +7,13 @@ import Layout from '../Layout'
 import CardsBlock from '../CardsBlock'
 import DataService from '../../lib/DataService'
 
-import { removeUnecessaryFields, getHomeworld, getSpecies, getStarshipsAndVehicles } from '../../lib/ETL'
+import { removeUnecessaryFields, getHomeworld, getSpecies, getStarships, getVehicles } from '../../lib/ETL'
 import { BeatLoader } from 'react-spinners'
 
 const HomeScreen = () => {
 
     const [sortBy, setSortBy] = useState('homeworld');
-    const [characterDetails, setCharacterDetails] = useState(undefined);
+    const [allCharactersDetails, setCharacterDetails] = useState(undefined);
 
     useLayoutEffect(() => {
         extractData();
@@ -24,9 +24,11 @@ const HomeScreen = () => {
             .then(response => removeUnecessaryFields(response.data.results))
             .then(response => getHomeworld(response))
             .then(response => getSpecies(response))
-            .then(response => getStarshipsAndVehicles(response))
-            .then(response => setCharacterDetails(response))
+            .then(response => getStarships(response))
+            .then(response => getVehicles(response))
+            .then(results => setCharacterDetails(results))
             .catch(err => console.log(err));
+
     };
 
     const AscendingCompareFn = (firstObject, secondObject) => {
@@ -84,11 +86,11 @@ const HomeScreen = () => {
     };
 
     const invokeSortAsc = () => {
-        setCharacterDetails(sortAscending(characterDetails))
+        setCharacterDetails(sortAscending(allCharactersDetails))
     };
 
     const invokeSortDesc = () => {
-        setCharacterDetails(sortDescending(characterDetails))
+        setCharacterDetails(sortDescending(allCharactersDetails))
     };
 
     const handleSelectChange = (e) => {
@@ -114,9 +116,9 @@ const HomeScreen = () => {
                         <button onClick={() => invokeSortDesc()}> DESC </button>
                     </span>
                 </div>
-                {!characterDetails ?
+                {!allCharactersDetails ?
                     <BeatLoader size={100} /> :
-                    <CardsBlock data={characterDetails} />
+                    <CardsBlock data={allCharactersDetails} />
                 }
             </Layout>
 

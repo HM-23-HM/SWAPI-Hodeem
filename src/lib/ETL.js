@@ -70,77 +70,66 @@ export const getSpecies = (relevantData) => {
 
 };
 
-export const getStarshipsAndVehicles = async (relevantData) => {
+export const getStarships = async (relevantData) => {
 
-    let combinedPromises = [];
+    let combinedResults = [];
 
-    relevantData.forEach((character) => {
+    for (let i = 0; i < relevantData.length; i++) {
 
-        let promises_starshipNames = [];
+        let initialStarshipNames = [];
 
-        let starshipEndpoints = character.starships;
+        let starshipEndpoints = relevantData[i].starships;
 
         if (starshipEndpoints.length === 0) {
-            combinedPromises.push(Promise.resolve({ type: 'starship', value: [] }));
-            return;
+            combinedResults.push([]);
+            continue;
         }
 
-        starshipEndpoints.forEach((endpoint) => {
+        for (let i = 0; i < starshipEndpoints.length; i++) {
+            let response = await DataService.getMissingData(starshipEndpoints[i]);
+            let name = response.data.name;
+            initialStarshipNames.push(name);
+        }
 
-            let promise = DataService.getMissingData(endpoint)
-                .then(response => response.data.name);
+        combinedResults.push(initialStarshipNames);
+    }
 
-            promises_starshipNames.push(promise);
-        })
+    for (let i = 0; i < relevantData.length; i++) {
+        relevantData[i].starships = combinedResults[i];
+    }
 
-        combinedPromises.push(Promise.resolve({ type: 'starship', value: promises_starshipNames }));
-    })
+    return relevantData;
+}
 
-    relevantData.forEach((character) => {
+export const getVehicles = async (relevantData) => {
 
-        let promises_vehicleNames = [];
+    let combinedResults = [];
 
-        let vehicleEndpoints = character.vehicles;
+    for (let i = 0; i < relevantData.length; i++) {
+
+        let initialVehicleNames = [];
+
+        let vehicleEndpoints = relevantData[i].vehicles;
 
         if (vehicleEndpoints.length === 0) {
-            combinedPromises.push(Promise.resolve({ type: 'vehicle', value: [] }));
-            return;
+            combinedResults.push([]);
+            continue;
         }
 
-        vehicleEndpoints.forEach((endpoint) => {
+        for (let i = 0; i < vehicleEndpoints.length; i++) {
+            let response = await DataService.getMissingData(vehicleEndpoints[i]);
+            let name = response.data.name;
+            initialVehicleNames.push(name);
+        }
 
-            let promise = DataService.getMissingData(endpoint)
-                .then(response => response.data.name)
+        combinedResults.push(initialVehicleNames);
+    }
 
-            promises_vehicleNames.push(promise);
+    for (let i = 0; i < relevantData.length; i++) {
+        relevantData[i].vehicles = combinedResults[i];
+    }
 
-        })
+    return relevantData;
+}
 
-        combinedPromises.push(Promise.resolve({ type: 'vehicle', value: promises_vehicleNames }));
-    })
 
-    let starshipNames = [];
-    let vehicleNames = [];
-
-    let finalPromise = await Promise.allSettled(combinedPromises)
-        .then((promises) => {
-
-            promises.forEach((promise) => {
-                if (promise.value.type == 'starship') {
-                    starshipNames.push(promise.value.value);
-                } else {
-                    vehicleNames.push(promise.value.value);
-                }
-            })
-
-            for (let i = 0; i < relevantData.length; i++) {
-                relevantData[i].starships = starshipNames[i];
-                relevantData[i].vehicles = vehicleNames[i];
-            }
-
-            return relevantData;
-        })
-        .catch(err => console.log(err));
-
-    return finalPromise;
-};

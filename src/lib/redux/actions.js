@@ -1,10 +1,11 @@
 export const TO_DETAILS = 'TO_DETAILS'
 export const TO_SUMMARIES = 'TO_SUMMARIES'
 
-export function toDetails(name){
+export function toDetails(name, details){
     return {
         type: TO_DETAILS,
-        name: name
+        name: name,
+        details: details
     }
 }
 

@@ -130,6 +130,8 @@ body {
 
 #sort-bar {
   margin: 8px 0px 24px 0px;
+  display: flex;
+  align-items: center;
 }
 
 a[href='/detailed'] {
@@ -173,6 +175,8 @@ a[href='/detailed'] {
 #sortBy {
   border: none;
   border-radius: 6px;
+  height: 32px;
+  margin-left: 6px;
 }
 
 

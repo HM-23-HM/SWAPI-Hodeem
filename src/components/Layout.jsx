@@ -1,7 +1,7 @@
 import { useState, useLayoutEffect } from 'react'
 
 import DataService from '../lib/DataService'
-import { removeUnecessaryFields, getHomeworld, getSpecies, getStarshipsAndVehicles } from '../lib/ETL'
+import { removeUnecessaryFields, getHomeworld, getSpecies, getStarships } from '../lib/ETL'
 
 
 import React from 'react'
@@ -30,7 +30,7 @@ const Layout = (props) => {
             .then(response => removeUnecessaryFields(response.data.results))
             .then(response => getHomeworld(response))
             .then(response => getSpecies(response))
-            .then(response => getStarshipsAndVehicles(response))
+            .then(response => getStarships(response))
             .then(response => setCharacterDetails(response))
             .catch(err => console.log(err));
     };

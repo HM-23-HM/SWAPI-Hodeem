@@ -3,6 +3,7 @@ import { TO_DETAILS, TO_SUMMARIES} from '../redux/actions'
 
 let initialState = {
     name: '',
+    details: {},
     isDetailed: false
 };
 
@@ -12,7 +13,7 @@ const reducer = (state = initialState, action) => {
             let newState = {...state};
             newState.isDetailed = true;
             newState.name = action.name;
-            console.log(newState);
+            newState.details = action.details;
             return newState;
         }
 
