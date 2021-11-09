@@ -74,7 +74,7 @@ body {
   display: grid;
 }
 
-.top-block {
+.layout {
   width: 100%;
 }
 
@@ -131,6 +131,50 @@ body {
 #sort-bar {
   margin: 8px 0px 24px 0px;
 }
+
+a[href='/detailed'] {
+  text-decoration: none;
+}
+
+#route-bar, #sort-bar {
+  display: flex;
+}
+
+#route-bar > span:nth-child(3) {
+  color: #969696;
+}
+
+#sort-btn-group > button{
+  border: none;
+  padding: 8px 10px 8px 10px;
+  height: 32px;
+  background-color: white;
+}
+
+#sort-btn-group {
+  border: solid #B8B8B8 1px;
+  margin-left: 6px;
+  border-radius: 4px;
+}
+
+#sort-btn-group > button:nth-child(1) {
+  border-radius: 6px 0px 0px 6px;
+  border-right: solid #B8B8B8 1px;
+}
+
+#sort-btn-group > button:nth-child(2) {
+  border-radius: 0px 6px 6px 0px;
+}
+
+#sort-btn-group > button:focus {
+  background-color: #B8B8B8;
+}
+
+#sortBy {
+  border: none;
+  border-radius: 6px;
+}
+
 
 @media only screen and (min-width: 320px) {
   body {

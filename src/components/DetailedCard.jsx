@@ -7,9 +7,7 @@ import HomeworldIcon from '../icons/Homeworld.svg'
 import Starship from '../icons/Starship.svg'
 import Vehicle from '../icons/Vehicle.svg'
 
-const SummaryCard = ({ data }) => {
-
-    // console.log("New data", data);
+const DetailCard = ({ data }) => {
 
     const numVehicles = data.vehicles.length;
     const numStarships = data.starships.length;
@@ -17,14 +15,14 @@ const SummaryCard = ({ data }) => {
     return (
         <div className='card'>
             <div className='name-block'>
-            <div className='name-icon'><img src={Card} /></div>
+                <div className='name-icon'><img src={Card} /></div>
                 <p className='name'>{data.name}</p>
             </div>
             <div className='details-block'>
                 <div className='demographics'>
                     <div className="demographic-block">
                         <span>
-                            <img src={GenderMale} />                            
+                            <img src={GenderMale} />
                             <span className='value gender'>{data.gender}</span>
                         </span>
                         <span className='value'>{data.species}</span>
@@ -34,7 +32,7 @@ const SummaryCard = ({ data }) => {
                     <div className="field">
                         <span className='label-block'>
                             <img className='icon' src={HomeworldIcon} />
-                            <span className='label'>HOMEWORLD</span>
+                            <span className='label'>HOMEWORLD111</span>
                         </span>
 
                         <span className='value'>{data.homeworld}</span>
@@ -62,4 +60,5 @@ const SummaryCard = ({ data }) => {
     )
 }
 
-export default SummaryCard;
+
+export default DetailCard;

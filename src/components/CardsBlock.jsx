@@ -1,15 +1,40 @@
 import React from 'react'
-import SummaryCard from './Summary'
 
-const CardsBlock = ({ data }) => {
+import { useState } from 'react'
+import SummaryCard from './SummaryCard'
+import DetailCard from './DetailedCard'
 
-    return(
+import { connect } from 'react-redux'
+import { toDetails } from '../lib/redux/actions'
+
+
+const MapStateToProps = (state) => ({
+    isDetailed: state.isDetailed
+})
+
+const mapDispatchToProps = {
+    dispatchToDetails: (name) => toDetails(name)
+};
+
+const CardsBlock = (props) => {
+
+    const [details, setDetails] = useState(undefined);
+
+    return (
         <div className='cards-block'>
-            {data.map((character) => (
-                <SummaryCard key={character.name} data={character}/>
-            ))}
+            {!props.isDetailed ? props.data.map((character) => (
+                <div key={character.name} onClick={() => {
+                    setDetails(character);
+                    props.dispatchToDetails(character.name);
+                }}>
+                    <SummaryCard key={character.name} data={character} />
+                </div>
+            ))
+                :
+                <DetailCard data={details}/>
+            }
         </div>
     )
 }
 
-export default CardsBlock;
+export default connect(MapStateToProps, mapDispatchToProps)(CardsBlock);
