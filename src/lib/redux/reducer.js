@@ -1,10 +1,11 @@
 import _ from 'lodash';
-import { TO_DETAILS, TO_SUMMARIES} from '../redux/actions'
+import { TO_DETAILS, TO_SUMMARIES, SORT_BY} from '../redux/actions'
 
 let initialState = {
     name: '',
     details: {},
-    isDetailed: false
+    isDetailed: false,
+    sortBy: 'Homeworld'
 };
 
 const reducer = (state = initialState, action) => {
@@ -21,6 +22,12 @@ const reducer = (state = initialState, action) => {
             let newState = {...state};
             newState.isDetailed = false;
             newState.name = "";
+            return newState;
+        }
+
+        case SORT_BY: {
+            let newState = {...state};
+            newState.sortBy = action.sortBy;
             return newState;
         }
 

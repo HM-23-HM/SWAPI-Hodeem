@@ -15,6 +15,8 @@ import CardIcon from './icons/Card.svg'
 import DeckIcon from './icons/Deck.svg'
 import ChevronRight from './icons/ChevronRight.svg'
 
+import ChevronDown from './icons/ChevronDown.svg'
+
 const mapStateToProps = (state) => ({
     nameOfDetailedPlayer: state.name
 })
@@ -25,7 +27,7 @@ const mapDispatchToProps = {
 
 const App = (props) => {
 
-    const [sortBy, setSortBy] = useState('homeworld');
+    const [sortBy, setSortBy] = useState('Homeworld');
     const [allCharactersDetails, setCharacterDetails] = useState(undefined);
 
     useLayoutEffect(() => {
@@ -55,17 +57,17 @@ const App = (props) => {
      */
     const AscendingCompareFn = (firstObject, secondObject) => {
 
-        if (sortBy == 'homeworld') {
+        if (sortBy == 'Homeworld') {
             var firstEl = firstObject.homeworld;
             var secondEl = secondObject.homeworld;
         }
 
-        if (sortBy == 'vehicles') {
+        if (sortBy == 'Vehicles') {
             var firstEl = firstObject.vehicles.length;
             var secondEl = secondObject.vehicles.length;
         }
 
-        if (sortBy == 'starships') {
+        if (sortBy == 'Starships') {
             var firstEl = firstObject.starships.length;
             var secondEl = secondObject.starships.length;
         }
@@ -83,17 +85,17 @@ const App = (props) => {
      */
     const DescendingCompareFn = (firstObject, secondObject) => {
 
-        if (sortBy == 'homeworld') {
+        if (sortBy == 'Homeworld') {
             var firstEl = firstObject.homeworld;
             var secondEl = secondObject.homeworld;
         }
 
-        if (sortBy == 'vehicles') {
+        if (sortBy == 'Vehicles') {
             var firstEl = firstObject.vehicles.length;
             var secondEl = secondObject.vehicles.length;
         }
 
-        if (sortBy == 'starships') {
+        if (sortBy == 'Starships') {
             var firstEl = firstObject.starships.length;
             var secondEl = secondObject.starships.length;
         }
@@ -155,11 +157,18 @@ const App = (props) => {
 
                 <div id="sort-bar">
                     <span>Sort By: </span>
-                    <select id="sortBy" onChange={handleSelectChange}>
-                        <option value="homeworld">Homeworld</option>
-                        <option value="starships">Starships</option>
-                        <option value="vehicles">Vehicles</option>
-                    </select>
+                    <div className='split-btn'>
+                        <button> {sortBy} </button>
+                        <div className='dropdown'>
+                            <button><img src={ChevronDown} /></button>
+                            <div className='dropdown-content'>
+                                <a onClick={() => setSortBy('Homeworld')}> Homeworld </a>
+                                <a onClick={() => setSortBy('Vehicles')}> Vehicles</a>
+                                <a onClick={() => setSortBy('Starships')}> Starships </a>
+                            </div>
+                        </div>
+                    </div>
+
                     <span id='sort-btn-group'>
                         <button onClick={() => setCharacterDetails(sortAscending(allCharactersDetails))}> ASC </button>
                         <button onClick={() => setCharacterDetails(sortDescending(allCharactersDetails))}> DESC </button>
