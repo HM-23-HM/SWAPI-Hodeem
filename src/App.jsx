@@ -123,10 +123,6 @@ const App = (props) => {
         return sortedArray;
     };
 
-    const handleSelectChange = (e) => {
-        setSortBy(e.target.value);
-    };
-
     return (
         <div>
             <div id='before-search'>
